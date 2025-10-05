@@ -78,6 +78,14 @@ const AudioPlayer: FC<AudioPlayerProps> = ({
       wavesurfer.current.on("audioprocess", () => {
         setCurrentTime(formatTime(wavesurfer.current?.getCurrentTime() || 0));
       });
+
+      wavesurfer.current.on("play", () => {
+        setPlaying(true);
+      });
+
+      wavesurfer.current.on("pause", () => {
+        setPlaying(false);
+      });
     }
 
     return () => {
