@@ -15,17 +15,17 @@
     "react": ">=17.0.0",
     "react-dom": ">=17.0.0",
     "react-icons": ">=4.0.0",
-    "wavesurfer.js": "^7.9.1",
-    "tailwindcss": ">=3.0.0"
+    "tailwindcss": ">=3.0.0",
+    "wavesurfer.js": "^7.9.1"
   },
   "devDependencies": {
     "@types/react": "^19.0.10",
     "@types/react-dom": "^19.0.4",
-    "typescript": "^5.7.3"
+    "typescript": "^5.9.3"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/theabhipatel/react-wave-audio-player.git"
+    "url": "https://github.com/mfekete27/react-wave-audio-player"
   },
   "keywords": [
     "react",

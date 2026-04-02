@@ -1,7 +1,11 @@
-import { useEffect, useRef, useState, FC, ReactNode, ChangeEvent } from "react";
+import { useEffect, useRef, useState, ReactNode, ChangeEvent, forwardRef, useImperativeHandle } from "react";
 import WaveSurfer from "wavesurfer.js";
 import { FaPlay, FaPause, FaDownload } from "react-icons/fa";
 import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
+
+export type AudioPlayerHandle = {
+  getCurrentTime: () => number;
+};
 
 type AudioPlayerProps = {
   src: string;
@@ -24,7 +28,7 @@ type AudioPlayerProps = {
   onVolumeChange?: (volume: number) => void;
 };
 
-const AudioPlayer: FC<AudioPlayerProps> = ({
+const AudioPlayer = forwardRef<AudioPlayerHandle, AudioPlayerProps>(({
   src,
   waveColor = "#a3aed0",
   progressColor = "#3311db",
@@ -43,9 +47,13 @@ const AudioPlayer: FC<AudioPlayerProps> = ({
   onPlay,
   onPause,
   onVolumeChange,
-}) => {
+}, ref) => {
   const waveformRef = useRef<HTMLDivElement | null>(null);
   const wavesurfer = useRef<WaveSurfer | null>(null);
+
+  useImperativeHandle(ref, () => ({
+    getCurrentTime: () => wavesurfer.current?.getCurrentTime() ?? 0,
+  }));
 
   const [playing, setPlaying] = useState<boolean>(false);
   const [volume, setVolume] = useState<number>(1);
@@ -236,6 +244,6 @@ const AudioPlayer: FC<AudioPlayerProps> = ({
       </div>
     </div>
   );
-};
+});
 
 export default AudioPlayer;
