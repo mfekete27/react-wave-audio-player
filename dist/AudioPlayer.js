@@ -6,8 +6,9 @@ import { BsFillVolumeMuteFill, BsFillVolumeUpFill } from "react-icons/bs";
 const AudioPlayer = forwardRef(({ src, waveColor = "#a3aed0", progressColor = "#3311db", cursorColor = "blue", buttonsColor = "#3311db", barWidth = 2, barRadius = 2, barGap = 1, height = 100, className = "", playIcon = _jsx(FaPlay, { className: "text-lg " }), pauseIcon = _jsx(FaPause, { className: "text-lg " }), volumeUpIcon = _jsx(BsFillVolumeUpFill, { className: "h-7 w-7 " }), volumeMuteIcon = _jsx(BsFillVolumeMuteFill, { className: "h-7 w-7 " }), playbackSpeeds = [1, 1.5, 2], onPlay, onPause, onVolumeChange, }, ref) => {
     const waveformRef = useRef(null);
     const wavesurfer = useRef(null);
+    const lastTimeRef = useRef(0);
     useImperativeHandle(ref, () => ({
-        getCurrentTime: () => { var _a, _b; return (_b = (_a = wavesurfer.current) === null || _a === void 0 ? void 0 : _a.getCurrentTime()) !== null && _b !== void 0 ? _b : 0; },
+        getCurrentTime: () => lastTimeRef.current,
     }));
     const [playing, setPlaying] = useState(false);
     const [volume, setVolume] = useState(1);
@@ -34,9 +35,12 @@ const AudioPlayer = forwardRef(({ src, waveColor = "#a3aed0", progressColor = "#
                 var _a;
                 setDuration(formatTime(((_a = wavesurfer.current) === null || _a === void 0 ? void 0 : _a.getDuration()) || 0));
             });
-            wavesurfer.current.on("audioprocess", () => {
-                var _a;
-                setCurrentTime(formatTime(((_a = wavesurfer.current) === null || _a === void 0 ? void 0 : _a.getCurrentTime()) || 0));
+            wavesurfer.current.on("audioprocess", (currentTime) => {
+                lastTimeRef.current = currentTime;
+                setCurrentTime(formatTime(currentTime || 0));
+            });
+            wavesurfer.current.on("seeking", (currentTime) => {
+                lastTimeRef.current = currentTime;
             });
             wavesurfer.current.on("play", () => {
                 setPlaying(true);
